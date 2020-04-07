@@ -13,13 +13,7 @@ function displayUsers() {
         .find({}, { limit: 1000 })
         .asArray()
         .then(docs => {
-        //const html = docs.map(doc => `<div>${doc.user} ${doc._id}</div>`);
-        const html = docs.map(doc => `<div>${doc.user}</div>
-                          <input id="delete_user"
-                            type="button" value="Delete User"
-                            onClick="deleteUser(${doc._id})"
-                            >`
-                        );
+        const html = docs.map(doc => `<div>${doc.user}</div>`);
         document.getElementById("users").innerHTML = html;
         })
 }
@@ -42,18 +36,23 @@ function addUser() {
     newUser.value = "";
 }
 
-function deleteUser(user_id) {
+function deleteUser() {
     
-    console.log("deleting user:" + user_id);
+    const userToBeDeleted = document.getElementById("delete_user");
+
+    console.log("deleting user: ");
 
     db.collection("users")
-        .deleteOne( {"_id": {$oid: "5e8ba4071c9d440000ccb2dd"}})
+        .deleteOne( {user: userToBeDeleted.value})
         .then(displayUsers);
-        
+   
+    alert("User '" + userToBeDeleted.value + "' is deleted.");
 }
 
 function deleteAllUsers() {
     console.log("deleting all users");
+
+    // <input id="delete_all_users" type="button" value="Delete All Users" onClick="deleteAllUsers()">
 
     db.collection("users").deleteMany({});
     document.getElementById("users").innerHTML = "";	
