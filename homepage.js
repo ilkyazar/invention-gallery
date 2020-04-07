@@ -31,7 +31,10 @@ function addUser() {
     console.log("add user", client.auth.user.id)
 
     db.collection("users")
-        .insertOne({ owner_id: client.auth.user.id, user: newUser.value })
+        .insertOne({ owner_id: client.auth.user.id,
+                    user: newUser.value,
+                    inventions: [],
+                    rating: 0 })
         .then(displayUsers);
     newUser.value = "";
 }
@@ -49,10 +52,34 @@ function deleteUser() {
     alert("User '" + userToBeDeleted.value + "' is deleted.");
 }
 
+function loginUser() {
+    
+    const loginUser = document.getElementById("login_user");
+
+    console.log("login as a user: ");
+
+    db.collection("users")
+        .find( {user: loginUser.value})
+        .asArray()
+        .then(docs =>
+            loadUser(loginUser.value,
+                     docs.map(u => u.rating),
+                     docs.map(u => u.inventions)) 
+            );
+}
+
+function loadUser(user, rating, inventions) {
+
+    if (user != "") {
+        document.location = "user.html?username=" + user + "&rating=" + rating;
+    } else {
+        alert(user + " does not exist.");
+    }
+    
+}
+
 function deleteAllUsers() {
     console.log("deleting all users");
-
-    // <input id="delete_all_users" type="button" value="Delete All Users" onClick="deleteAllUsers()">
 
     db.collection("users").deleteMany({});
     document.getElementById("users").innerHTML = "";	
