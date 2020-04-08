@@ -20,26 +20,60 @@
     <br/>
     <h4>Gallery</h4>
 
-      <div class="container">      
+    <div class="container">
+      
+        <input id="exhibit-button" class="usr-main-btn" type="button" value="Exhibit!" onClick="exhibitInvention()">
+
+        <div id="exhibit" class="exhibit-form">
+    
+          <div class="exhibit-content">
+              <input id="exhibit-close" type="button" value="X" onClick="closeExhibit()">
+              
+              <h4>Exhibit an invention!</h4>
+
+              <label> Product Name</label>
+              <input type="text" id="product-name" class="exhibit-form-input" name="product-name">
+
+              <label> Photo</label>
+              <input type="text" id="product-photo" class="exhibit-form-input" name="product-photo" placeholder="URL of the photo">
+
+              <label> Product cost</label>
+              <input type="text" id="product-cost" class="exhibit-form-input" name="product-cost">
+
+              <label> Materials used</label>
+              <input type="text" id="product-materials" class="exhibit-form-input" name="product-materials">
+
+              <label> Inventors name</label>
+              <input type="text" id="inventor-name" class="exhibit-form-input" name="inventor-name">
+
+              <input type="button" class="usr-main-btn" value="Submit">
+            
+          </div>
+    
+        </div>
+
+
         <div class="invention-gallery">
-          <div class="invention-item" tabindex="0">
-            <img src="https://images.complex.com/complex/image/upload/c_fill,dpr_auto,f_auto,q_90,w_920/fl_lossy,pg_1/drizpl4aqvcloympzo2k.jpg"
-            class="invention-img" alt="">
-          </div>
-    
-          <div class="invention-item" tabindex="0">
-            <img src="https://images.unsplash.com/photo-1497445462247-4330a224fdb1?w=500&h=500&fit=crop"
-            class="invention-img" alt="">
-          </div>
-    
-          <div class="invention-item" tabindex="0">
-            <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop"
-            class="invention-img" alt="">
-          </div>
+            <div class="invention-item" tabindex="0">
+                <img src="https://images.complex.com/complex/image/upload/c_fill,dpr_auto,f_auto,q_90,w_920/fl_lossy,pg_1/drizpl4aqvcloympzo2k.jpg"
+                class="invention-img" id="invention-img" alt="">
+            </div>
+      
+            <div class="invention-item" tabindex="0">
+                <img src="https://images.unsplash.com/photo-1497445462247-4330a224fdb1?w=500&h=500&fit=crop"
+                class="invention-img" id="invention-img" alt="">
+            </div>
+      
+            <div class="invention-item" tabindex="0">
+                <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop"
+                class="invention-img" id="invention-img" alt="">
+            </div>
 
         </div>
-    
-      </div>
+  
+    </div>
+
+      
 
     </body>
 

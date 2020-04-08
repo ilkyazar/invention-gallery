@@ -8,6 +8,7 @@ const mongodb = client.getServiceClient(
 // Get a reference to the gallery database
 const db = mongodb.db("gallery");
 
+
 function loadUserInfo() {
     var url_string = document.location.href;
     var url = new URL(url_string);
@@ -18,4 +19,15 @@ function loadUserInfo() {
     document.getElementById("username").innerHTML = username;
     document.getElementById("rating").innerHTML = rating;
 }
+
+function exhibitInvention() {
+  exhibit = document.getElementById("exhibit");
+  exhibit.style.display = "block";
+}
+
+function closeExhibit() {
+  exhibit = document.getElementById("exhibit");
+  exhibit.style.display = "none";
+}
+
 
