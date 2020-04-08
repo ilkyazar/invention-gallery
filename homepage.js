@@ -13,8 +13,8 @@ function displayUsers() {
         .find({}, { limit: 1000 })
         .asArray()
         .then(docs => {
-        const html = docs.map(doc => `<div>${doc.user}</div>`);
-        document.getElementById("users").innerHTML = html;
+            const html = docs.map(doc => `<div>${doc.user}</div>`);
+            document.getElementById("users").innerHTML = html;
         })
 }
 
@@ -28,28 +28,52 @@ function displayUsersOnLoad() {
 function addUser() {
     const newUser = document.getElementById("new_user");
 
-    console.log("add user", client.auth.user.id)
-
     db.collection("users")
-        .insertOne({ owner_id: client.auth.user.id,
-                    user: newUser.value,
-                    inventions: [],
-                    rating: 0 })
-        .then(displayUsers);
-    newUser.value = "";
+    .find({user: newUser.value}, { limit: 1 })
+    .asArray()
+    .then(function (docs) {
+        if (docs.length > 0) {
+            alert("User name should be unique.");
+            newUser.value = "";
+        }
+        else {       
+            console.log("add user", client.auth.user.id)     
+            db.collection("users")
+                .insertOne({ owner_id: client.auth.user.id,
+                            user: newUser.value,
+                            inventions: [],
+                            rating: 0 })
+                .then(displayUsers);
+            newUser.value = "";                        
+        }
+    });
+    
 }
 
 function deleteUser() {
     
     const userToBeDeleted = document.getElementById("delete_user");
 
-    console.log("deleting user: ");
-
     db.collection("users")
-        .deleteOne( {user: userToBeDeleted.value})
-        .then(displayUsers);
-   
-    alert("User '" + userToBeDeleted.value + "' is deleted.");
+    .find({user: userToBeDeleted.value}, { limit: 1 })
+    .asArray()
+    .then(function (docs) {
+        if (docs.length == 0) {
+            alert("User '" + userToBeDeleted.value + "' does not exist.");
+            userToBeDeleted.value = "";
+        }
+        else {       
+            console.log("deleting user: ");
+
+            db.collection("users")
+                .deleteOne( {user: userToBeDeleted.value})
+                .then(displayUsers);
+        
+            alert("User '" + userToBeDeleted.value + "' is deleted."); 
+            userToBeDeleted.value = "";                       
+        }
+    });
+    
 }
 
 function loginUser() {
@@ -57,15 +81,23 @@ function loginUser() {
     const loginUser = document.getElementById("login_user");
 
     console.log("login as a user: ");
-
+    
     db.collection("users")
-        .find( {user: loginUser.value})
-        .asArray()
-        .then(docs =>
+    .find({user: loginUser.value}, { limit: 1 })
+    .asArray()
+    .then(function (docs) {
+        if (docs.length == 0) {
+            alert("User '" + loginUser.value + "' does not exist.");
+            loginUser.value = "";    
+        }
+        else {            
             loadUser(loginUser.value,
-                     docs.map(u => u.rating),
-                     docs.map(u => u.inventions)) 
-            );
+                        docs.map(u => u.rating),
+                        docs.map(u => u.inventions));
+                        
+        }
+    });    
+    
 }
 
 function loadUser(user, rating, inventions) {
