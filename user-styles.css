@@ -1,0 +1,25 @@
+:root {
+    font-size: 20px;
+}
+
+.container {
+    padding: 0 2rem;
+}
+
+.invention-gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.invention-item {
+    position: relative;
+    cursor: pointer;
+    margin: 2rem;
+    color: #fff;
+}
+
+.invention-img {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+}
