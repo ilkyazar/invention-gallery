@@ -41,7 +41,7 @@ function addUser() {
             db.collection("users")
                 .insertOne({ owner_id: client.auth.user.id,
                             user: newUser.value,
-                            inventions: [],
+                            inventions: {},
                             rating: 0 })
                 .then(displayUsers);
             newUser.value = "";                        
@@ -103,7 +103,7 @@ function loginUser() {
 function loadUser(user, rating, inventions) {
 
     if (user != "") {
-        document.location = "user.html?username=" + user + "&rating=" + rating;
+        document.location = "user.html?username=" + user;
     } else {
         alert(user + " does not exist.");
     }
