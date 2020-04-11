@@ -32,7 +32,13 @@ function loadUserInfo() {
 }
 
 function loadGallery() {
-
+  db.collection("inventions")
+        .find({}, { limit: 1000 })
+        .asArray()
+        .then(docs => {
+          const photo_url = docs.map(doc => `<img src=\"${doc.productPhoto}\" class=\"invention-img\" id=\"invention-img\" >`);
+          document.getElementById("invention-item").innerHTML = photo_url;
+        })
 }
 
 function openExhibit() {
