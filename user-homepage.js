@@ -36,7 +36,11 @@ function loadGallery() {
         .find({}, { limit: 1000 })
         .asArray()
         .then(docs => {
-          const photo_url = docs.map(doc => `<img src=\"${doc.productPhoto}\" class=\"invention-img\" id=\"invention-img\" >`);
+
+          const photo_url = docs.map(doc => 
+              `<div id=\"invention-item\" class=\"invention-item\" tabindex=\"0\"> 
+                  <img src=\"${doc.productPhoto}\" class=\"invention-img\" id=\"invention-img\" alt=\"\">
+                  </div>`);
           document.getElementById("invention-item").innerHTML = photo_url;
         })
 }
