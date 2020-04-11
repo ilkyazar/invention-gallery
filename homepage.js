@@ -41,7 +41,7 @@ function addUser() {
             db.collection("users")
                 .insertOne({ owner_id: client.auth.user.id,
                             user: newUser.value,
-                            inventions: {},
+                            inventions: [],
                             rating: 0 })
                 .then(displayUsers);
             newUser.value = "";                        

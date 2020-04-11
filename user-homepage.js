@@ -28,6 +28,11 @@ function loadUserInfo() {
     document.getElementById("username").innerHTML = username;
 
     user = username;
+    loadGallery();
+}
+
+function loadGallery() {
+
 }
 
 function openExhibit() {
@@ -47,27 +52,43 @@ function exhibitInvention() {
   const productCost = document.getElementById("product-cost");
   const productMaterials = document.getElementById("product-materials");
   const inventorName = document.getElementById("inventor-name");
+  
 
-  db.collection("users").updateOne(
-    { "user": user },
-    { $set: 
-      {  
-        "inventions.productName": productName.value,
-        "inventions.productPhoto": productPhoto.value,
-        "inventions.productCost": productCost.value,
-        "inventions.productMaterials": productMaterials.value,
-        "inventions.inventorName": inventorName.value,   
-      } 
-    }
-  )
-
-  alert("Your exhibiton was successful!"); 
-  productName.value = "";
-  productPhoto.value = "";
-  productCost.value = "";
-  productMaterials.value = "";
-  inventorName.value = "";
-  closeExhibit();
-
+  db.collection("inventions")
+    .find({productName: productName.value}, { limit: 1 })
+    .asArray()
+    .then(function (docs) {
+        if (docs.length > 0) {
+            alert("Product name should be unique.");
+            productName.value = "";
+        }
+        else {       
+          db.collection("inventions").insertOne(
+            {          
+                user: user,
+                productName: productName.value,
+                productPhoto: productPhoto.value,
+                productCost: productCost.value,
+                productMaterials: productMaterials.value,
+                inventorName: inventorName.value,    
+            }           
+          )
+          
+          db.collection("users").updateOne(
+            { "user": user },
+            { $push: 
+              { "inventions": productName.value } 
+            }
+          )
+          
+          alert("Your exhibiton was successful!"); 
+          productName.value = "";
+          productPhoto.value = "";
+          productCost.value = "";
+          productMaterials.value = "";
+          inventorName.value = "";
+          closeExhibit();
+        }
+    });
 }
 
