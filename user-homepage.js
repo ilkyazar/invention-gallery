@@ -14,6 +14,7 @@ function loadUserInfo() {
     var url = new URL(url_string);
 
     var username = url.searchParams.get("username");
+    console.log(username);
 
     db.collection("users")
     .find({user: username}, { limit: 1 })
@@ -38,11 +39,20 @@ function loadGallery() {
         .then(docs => {
 
           const photo_url = docs.map(doc => 
-              `<div id=\"invention-item\" class=\"invention-item\" tabindex=\"0\"> 
-                  <img src=\"${doc.productPhoto}\" class=\"invention-img\" id=\"invention-img\" alt=\"\">
-                  </div>`);
+              `<div id=\"invention-item\" class=\"invention-item\"
+                    tabindex=\"0\" onClick=\"loadInvention('${doc.productName}')\"> 
+                        <img src=\"${doc.productPhoto}\" class=\"invention-img\"
+                             id=\"invention-img\" alt=\"\">
+               </div>`);
           document.getElementById("invention-item").innerHTML = photo_url;
         })
+}
+
+function loadInvention(productName) {
+  console.log(productName);
+  if (productName != "") {
+    document.location = "invention.html?productname=" + productName;
+  } 
 }
 
 function openExhibit() {
