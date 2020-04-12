@@ -10,8 +10,12 @@
     color: orange;
 }
 
+.not-checked {
+    color: black;
+}
+
 .stars {
-    margin-left:220px;
+    margin-left:250px;
 }
 
 .invention-gallery {

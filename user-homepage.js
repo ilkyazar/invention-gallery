@@ -32,30 +32,40 @@ function loadUserInfo() {
 }
 
 function loadGallery() {
+
   db.collection("inventions")
         .find({showTo: user }, { limit: 1000 })
         .asArray()
-        .then(docs => {
+        .then(async function(docs) {
 
-          const photo_url = docs.map(doc => 
-              `<div id=\"invention-item\" class=\"invention-item\"
+            let invRatings = await Promise.all(docs.map(function(doc) {
+              return loadInventionRating(doc.productName);
+            }));
+            
+            inventionNr = -1;
+
+            const photo_area = docs.map(function(doc) {
+              inventionNr++;
+
+              ratingHtml = getRatingHtml(invRatings[inventionNr], doc.productName);
+
+              return `<div id=\"invention-item\" class=\"invention-item\"
                     tabindex=\"0\" > 
                         <img src=\"${doc.productPhoto}\" class=\"invention-img\"
-                             id=\"invention-img\" alt=\"\"
-                             onClick=\"loadInvention('${doc.productName}')\">
+                            id=\"invention-img\" alt=\"\"
+                            onClick=\"loadInvention('${doc.productName}')\">
                         <div>
                             <input type="button" class="drop-btn"
-                                   value="Drop" onClick="dropInvention('${doc.productName}')">
-                            <img class="stars">
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                            </img>
+                                  value="Drop" onClick="dropInvention('${doc.productName}')">
+                            <img class="stars">` +
+                                ratingHtml
+                            + `</img>
                         </div>
-               </div>`);
-          document.getElementById("invention-item").innerHTML = photo_url.join('');
+              </div>`
+                               
+              });
+
+              document.getElementById("invention-item").innerHTML = photo_area.join('');
         })
 }
 
@@ -64,6 +74,65 @@ function loadInvention(productName) {
   if (productName != "") {
     document.location = "invention.html?productname=" + productName;
   } 
+}
+
+async function loadInventionRating(productName) {
+  
+  let rating = await db.collection("users")
+    .find({user: user})
+    .asArray()
+    .then(function (docs) {
+      // ratedFor is an array of objects in the database
+      // first element of it has the objects with key-value pairs
+      const rated = docs.map(doc => doc.ratedFor)[0];
+
+      let i = 0;
+      while (rated[i]) {
+        if (rated[i][productName]) {
+          let invRating = rated[i][productName];
+          return invRating;
+        }
+        i++;
+      }
+                  
+    })
+
+  return rating || 0;
+}
+
+function getRatingHtml(rate, productName) {
+  var notCheckedSpan1 = `<span id="star" class="fa fa-star not-checked" onClick="rateInvention(`;
+  var notCheckedSpan2 = `, '${productName}')"></span>`;
+  var checkedSpan1 = `<span id="star" class="fa fa-star checked" onClick="rateInvention(`;
+  var checkedSpan2 = `, '${productName}')"></span>`;
+
+  var ratingHtml = '';
+
+  for (let i = 0; i < rate; i++) {
+      ratingHtml += checkedSpan1;
+      ratingHtml += i + 1;
+      ratingHtml += checkedSpan2;
+  }
+  for (let i = rate; i < 5; i++) {
+    ratingHtml += notCheckedSpan1;
+    ratingHtml += i + 1;
+    ratingHtml += notCheckedSpan2;
+  }
+
+  return ratingHtml;
+}
+
+function rateInvention(rate, productName) {
+  console.log("Rated " + productName + ": " + rate);
+
+  var $query = {};
+  $query[productName] = rate;
+
+  db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $query}})
+
+  alert("You rated " + productName + " " + rate + ".");
+
+  loadGallery();
 }
 
 function dropInvention(productName) {
