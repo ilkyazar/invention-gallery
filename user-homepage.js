@@ -14,7 +14,6 @@ function loadUserInfo() {
     var url = new URL(url_string);
 
     var username = url.searchParams.get("username");
-    console.log(username);
 
     db.collection("users")
     .find({user: username}, { limit: 1 })
@@ -34,18 +33,19 @@ function loadUserInfo() {
 
 function loadGallery() {
   db.collection("inventions")
-        .find({}, { limit: 1000 })
+        .find({showTo: user }, { limit: 1000 })
         .asArray()
         .then(docs => {
 
           const photo_url = docs.map(doc => 
               `<div id=\"invention-item\" class=\"invention-item\"
-                    tabindex=\"0\" onClick=\"loadInvention('${doc.productName}')\"> 
+                    tabindex=\"0\" > 
                         <img src=\"${doc.productPhoto}\" class=\"invention-img\"
-                             id=\"invention-img\" alt=\"\">
+                             id=\"invention-img\" alt=\"\"
+                             onClick=\"loadInvention('${doc.productName}')\">
                         <div>
                             <input type="button" class="drop-btn"
-                                   value="Drop" onClick="loadInvention()">
+                                   value="Drop" onClick="dropInvention('${doc.productName}')">
                             <img class="stars">
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star checked"></span>
@@ -64,6 +64,32 @@ function loadInvention(productName) {
   if (productName != "") {
     document.location = "invention.html?productname=" + productName;
   } 
+}
+
+function dropInvention(productName) {
+  console.log(user + " wants to drop " + productName);
+
+  db.collection("users")
+    .find({user: user, inventions: productName })
+    .asArray()
+    .then(function (docs) {
+        console.log(docs);
+
+        if (docs.length == 0) {
+          alert("You don't own this invention. You cannot drop it.")
+        }
+        else {
+          db.collection("inventions").updateOne(
+            { "productName": productName },
+            { $pull: 
+              { "showTo": user } 
+            }
+          )
+
+          alert("Invention dropped successfully.")
+          loadGallery();
+        }
+    })
 }
 
 function openExhibit() {
@@ -102,9 +128,12 @@ function exhibitInvention() {
                 productCost: productCost.value,
                 productMaterials: productMaterials.value,
                 inventorName: inventorName.value,    
+                showTo: []
             }           
           )
           
+          showToAll(productName.value);
+
           db.collection("users").updateOne(
             { "user": user },
             { $push: 
@@ -112,14 +141,33 @@ function exhibitInvention() {
             }
           )
           
-          alert("Your exhibiton was successful!"); 
+          alert("Your exhibiton was successful!\nRefresh the page!"); 
           productName.value = "";
           productPhoto.value = "";
           productCost.value = "";
           productMaterials.value = "";
           inventorName.value = "";
           closeExhibit();
+
+          loadGallery();
         }
     });
 }
 
+function showToAll(productName) {
+  db.collection("users")
+    .find({}, { limit: 1000 })
+    .asArray()
+    .then(docs => {
+        const usersInDB = docs.map(doc => doc.user);
+
+        for (username in usersInDB) {
+          db.collection("inventions").updateOne(
+            { "productName": productName },
+            { $push: 
+              { "showTo": usersInDB[username] } 
+            }
+          )
+        }
+    });
+}
