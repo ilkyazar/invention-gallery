@@ -55,7 +55,7 @@ function loadGallery() {
                             </img>
                         </div>
                </div>`);
-          document.getElementById("invention-item").innerHTML = photo_url;
+          document.getElementById("invention-item").innerHTML = photo_url.join('');
         })
 }
 

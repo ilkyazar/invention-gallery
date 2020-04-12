@@ -14,7 +14,7 @@ function displayUsers() {
         .asArray()
         .then(docs => {
             const html = docs.map(doc => `<div>${doc.user}</div>`);
-            document.getElementById("users").innerHTML = html;
+            document.getElementById("users").innerHTML = html.join('');
         })
 }
 
