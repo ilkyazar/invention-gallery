@@ -43,6 +43,17 @@ function loadGallery() {
                     tabindex=\"0\" onClick=\"loadInvention('${doc.productName}')\"> 
                         <img src=\"${doc.productPhoto}\" class=\"invention-img\"
                              id=\"invention-img\" alt=\"\">
+                        <div>
+                            <input type="button" class="drop-btn"
+                                   value="Drop" onClick="loadInvention()">
+                            <img class="stars">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                            </img>
+                        </div>
                </div>`);
           document.getElementById("invention-item").innerHTML = photo_url;
         })

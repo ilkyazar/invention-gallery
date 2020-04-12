@@ -6,6 +6,14 @@
     padding: 0 2rem;
 }
 
+.checked {
+    color: orange;
+}
+
+.stars {
+    margin-left:220px;
+}
+
 .invention-gallery {
     display: flex;
     flex-wrap: wrap;
@@ -22,6 +30,14 @@
     width: 450px;
     height: 450px;
     object-fit: cover;
+}
+
+.drop-btn {
+    padding: 15px 35px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    background-color: rgb(88, 84, 87);
 }
 
 .exhibit-form {
