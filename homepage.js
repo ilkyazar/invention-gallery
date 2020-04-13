@@ -27,11 +27,10 @@ function displayUsersOnLoad() {
 
 function addUser() {
     const newUser = document.getElementById("new_user");
-
     db.collection("users")
     .find({user: newUser.value}, { limit: 1 })
     .asArray()
-    .then(function (docs) {
+    .then(async function (docs) {
         if (docs.length > 0) {
             alert("User name should be unique.");
             newUser.value = "";
@@ -45,11 +44,34 @@ function addUser() {
                             ratedFor: [],
                             rating: 0 })
                 .then(displayUsers);
-            newUser.value = "";                        
+
+            await addToAllInventions(newUser.value)
+            newUser.value = "";
+
+                                 
         }
     });
     
 }
+
+async function addToAllInventions(newUser) {
+    await db.collection("inventions")
+      .find({}, { limit: 1000 })
+      .asArray()
+      .then(docs => {
+          const inventionsInDB = docs.map(doc => doc.productName);
+  
+          for (inv in inventionsInDB) {
+              console.log(newUser + " is added to " + inventionsInDB[inv]);
+            db.collection("inventions").updateOne(
+              { "productName": inventionsInDB[inv] },
+              { $push: 
+                { "showTo": newUser } 
+              }
+            )
+          }
+      });
+  }
 
 function deleteUser() {
     

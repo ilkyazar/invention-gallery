@@ -123,16 +123,68 @@ function getRatingHtml(rate, productName) {
 }
 
 function rateInvention(rate, productName) {
-  console.log("Rated " + productName + ": " + rate);
 
-  var $query = {};
-  $query[productName] = rate;
+  db.collection("users")
+    .find({user: user}, { limit: 1 })
+    .asArray()
+    .then(function (docs) {
 
-  db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $query}})
+        const rated = docs.map(doc => doc.ratedFor)[0];
 
-  alert("You rated " + productName + " " + rate + ".");
+        let i = 0;
+        let ratedBefore = 0;
+        while (rated[i]) {
+              if (rated[i][productName]) {
+                let invRating = rated[i][productName];
+                ratedBefore = 1;
+                alert("Previous rate (" + invRating + ") will be overwritten by " + rate);
 
-  loadGallery();
+                var $oldquery = {};
+                $oldquery[productName] = invRating;
+                db.collection("users").updateOne({user: user}, {$pull : {"ratedFor": $oldquery}});
+
+                var $newquery = {};
+                $newquery[productName] = rate;
+                db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $newquery}});
+
+                var $olduserquery = {};
+                $olduserquery[productName] = invRating;
+                db.collection("users").updateOne({productName: productName}, {$pull : {"usersRated": $olduserquery}});
+
+                var $newuserquery = {};
+                $newuserquery[productName] = rate;
+                db.collection("users").updateOne({productName: productName}, {$addToSet : {"usersRated": $newuserquery}});
+
+                alert("You rated " + productName + " " + rate + ".");
+
+                loadGallery();
+                
+            }
+            i++;
+        }
+
+        if (ratedBefore == 0) {       
+            var $query = {};
+            $query[productName] = rate;
+          
+            db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $query}})
+
+            var $userquery = {};
+            $userquery[user] = rate;
+
+            db.collection("inventions").updateOne({productName: productName}, {$addToSet : {"usersRated": $userquery}});
+
+            console.log(user + " is added to usersRated of " + productName);
+          
+            alert("You rated " + productName + " " + rate + ".");
+          
+            loadGallery();               
+            
+            // Update the rating of the invention
+            // Update the rating of the user
+        }
+    });
+  
 }
 
 function dropInvention(productName) {
@@ -183,7 +235,7 @@ function exhibitInvention() {
   db.collection("inventions")
     .find({productName: productName.value}, { limit: 1 })
     .asArray()
-    .then(function (docs) {
+    .then(async function (docs) {
         if (docs.length > 0) {
             alert("Product name should be unique.");
             productName.value = "";
@@ -197,11 +249,13 @@ function exhibitInvention() {
                 productCost: productCost.value,
                 productMaterials: productMaterials.value,
                 inventorName: inventorName.value,    
-                showTo: []
+                showTo: [],
+                usersRated: [],
+                rating: 0
             }           
           )
           
-          showToAll(productName.value);
+          await showToAll(productName.value);
 
           db.collection("users").updateOne(
             { "user": user },
@@ -223,8 +277,8 @@ function exhibitInvention() {
     });
 }
 
-function showToAll(productName) {
-  db.collection("users")
+async function showToAll(productName) {
+  await db.collection("users")
     .find({}, { limit: 1000 })
     .asArray()
     .then(docs => {
