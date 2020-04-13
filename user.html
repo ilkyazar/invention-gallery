@@ -7,19 +7,24 @@
   </head>
 
   <body onLoad="loadUserInfo()">
-    <h1>Invention Gallery</h1>
+    <div class="header">
+        <h1>Invention Gallery</h1>
 
-    <div id="user-homepage">
-      <h3>User Homepage</h3>
+        <div id="user-homepage">
+          <h3>User Homepage</h3>
+        </div>
     </div>
 
     <hr>
 
-    User Name: <div id="username"></div>
+    <div class="second-header">
+				<ul>
+            User Name: <li id="username"><span ></span> </li>
+            Rating: <li id="rating"><span ></span> </li>
+				</ul>
+		</div>
+
     <br/>
-    Rating: <div id="rating"></div>
-    <br/>
-    <h4>Gallery</h4>
 
     <div class="container">
       
@@ -28,7 +33,7 @@
         <div id="exhibit" class="exhibit-form">
     
           <div class="exhibit-content">
-              <input id="exhibit-close" type="button" value="X" onClick="closeExhibit()">
+              <input id="exhibit-close" class="exhibit-close" type="button" value="X" onClick="closeExhibit()">
               
               <h4>Exhibit an invention!</h4>
 
@@ -47,7 +52,7 @@
               <label> Inventors name</label>
               <input type="text" id="inventor-name" class="exhibit-form-input" name="inventor-name">
 
-              <input type="button"value="Submit" onClick="exhibitInvention()">
+              <input type="button" class="exhibit-submit" value="Submit" onClick="exhibitInvention()">
             
           </div>
     

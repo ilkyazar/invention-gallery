@@ -56,7 +56,7 @@ function loadGallery() {
                             onClick=\"loadInvention('${doc.productName}')\">
                         <div>
                             <input type="button" class="drop-btn"
-                                  value="Drop" onClick="dropInvention('${doc.productName}')">
+                                  value="D R O P" onClick="dropInvention('${doc.productName}')">
                             <img class="stars">` +
                                 ratingHtml
                             + `</img>
@@ -124,74 +124,89 @@ function getRatingHtml(rate, productName) {
 
 function rateInvention(rate, productName) {
 
+  console.log(user + " wants to rate " + productName);
+
   db.collection("users")
-    .find({user: user}, { limit: 1 })
+    .find({user: user, inventions: productName })
     .asArray()
-    .then(async function (docs) {
+    .then(function (docs) {
 
-        const rated = docs.map(doc => doc.ratedFor)[0];
+        if (docs.length == 0) {
+          db.collection("users")
+            .find({user: user}, { limit: 1 })
+            .asArray()
+            .then(async function (docs) {
 
-        let i = 0;
-        let ratedBefore = 0;
-        while (rated[i]) {
-              if (rated[i][productName]) {
-                let invRating = rated[i][productName];
-                ratedBefore = 1;
-                alert("Previous rate (" + invRating + ") will be overwritten by " + rate);
+                const rated = docs.map(doc => doc.ratedFor)[0];
 
-                var $oldquery = {};
-                $oldquery[productName] = invRating;
-                db.collection("users").updateOne({user: user}, {$pull : {"ratedFor": $oldquery}});
+                let i = 0;
+                let ratedBefore = 0;
+                while (rated[i]) {
+                      if (rated[i][productName]) {
+                        let invRating = rated[i][productName];
+                        ratedBefore = 1;
+                        alert("Previous rate (" + invRating + ") will be overwritten by " + rate);
 
-                var $newquery = {};
-                $newquery[productName] = rate;
-                db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $newquery}});
+                        var $oldquery = {};
+                        $oldquery[productName] = invRating;
+                        db.collection("users").updateOne({user: user}, {$pull : {"ratedFor": $oldquery}});
 
-                let oldRating = getUsersRatedString(user, invRating);
-                let newRating = getUsersRatedString(user, rate);
+                        var $newquery = {};
+                        $newquery[productName] = rate;
+                        db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $newquery}});
 
-                db.collection("inventions").updateOne({productName: productName}, {$pull : {"usersRated": oldRating}});
-                db.collection("inventions").updateOne({productName: productName}, {$addToSet : {"usersRated": newRating}});
+                        let oldRating = getUsersRatedString(user, invRating);
+                        let newRating = getUsersRatedString(user, rate);
 
-                alert("You rated " + productName + " " + rate + ".");
+                        db.collection("inventions").updateOne({productName: productName}, {$pull : {"usersRated": oldRating}});
+                        db.collection("inventions").updateOne({productName: productName}, {$addToSet : {"usersRated": newRating}});
 
-                loadGallery();
-                
-            }
-            i++;
+                        alert("You rated " + productName + " " + rate + ".");
+
+                        loadGallery();
+                        
+                    }
+                    i++;
+                }
+
+                if (ratedBefore == 0) {       
+                    var $query = {};
+                    $query[productName] = rate;
+                  
+                    db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $query}})
+
+                    let newRating = getUsersRatedString(user, rate);
+                    db.collection("inventions").updateOne({productName: productName}, {$addToSet : {"usersRated": newRating}});
+
+                    console.log(user + " is added to usersRated of " + productName);
+                  
+                    alert("You rated " + productName + " " + rate + ".");
+                  
+                    loadGallery();               
+                    
+                }
+
+                let invUpdated = await updateInventionRating(productName);
+
+                let username = await db.collection("inventions")
+                  .find({productName: productName}, { limit: 1 })
+                  .asArray()
+                  .then(function(docs) {
+                      const inventionPoster = docs.map(doc => doc.user);
+                      return inventionPoster[0];
+                  })
+
+                if (invUpdated == true)  {
+                    updateUserRating(username);
+                }
+            });
         }
-
-        if (ratedBefore == 0) {       
-            var $query = {};
-            $query[productName] = rate;
-          
-            db.collection("users").updateOne({user: user}, {$addToSet : {"ratedFor": $query}})
-
-            let newRating = getUsersRatedString(user, rate);
-            db.collection("inventions").updateOne({productName: productName}, {$addToSet : {"usersRated": newRating}});
-
-            console.log(user + " is added to usersRated of " + productName);
-          
-            alert("You rated " + productName + " " + rate + ".");
-          
-            loadGallery();               
-            
+        else {
+            alert("This is your own invention. You cannot rate it. ")
         }
+    })
 
-        let invUpdated = await updateInventionRating(productName);
-
-        let username = await db.collection("inventions")
-          .find({productName: productName}, { limit: 1 })
-          .asArray()
-          .then(function(docs) {
-              const inventionPoster = docs.map(doc => doc.user);
-              return inventionPoster[0];
-          })
-
-        if (invUpdated == true)  {
-            updateUserRating(username);
-        }
-    });
+  
   
 }
 

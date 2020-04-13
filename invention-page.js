@@ -30,10 +30,10 @@ function loadInventionInfo() {
             document.getElementById("product-name").innerHTML = name;
             document.getElementById("product-photo").innerHTML = `<div id=\"invention-item\" class=\"invention-item\"
                                                                        tabindex=\"0\"> 
-                                                                            <img src=\"${photoSource}\" class=\"invention-img\"
+                                                                            <img src=\"${photoSource}\" class=\"inv-info-one\"
                                                                                  id=\"invention-img\" alt=\"\">
                                                                   </div>`;
-            document.getElementById("photo-url").innerHTML = productPhoto;
+            document.getElementById("photo-url").innerHTML = `<a href=\"${photoSource}\">${photoSource}</a>`;
             document.getElementById("product-cost").innerHTML = productCost;
             document.getElementById("product-materials").innerHTML = productMaterials;
             document.getElementById("inventor-name").innerHTML = inventorName;

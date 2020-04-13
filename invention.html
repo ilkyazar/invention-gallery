@@ -3,43 +3,47 @@
     <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.0/stitch.js"></script>
     <script src="invention-page.js"></script>
     <link rel="stylesheet" type="text/css" href="user-styles.css" media="screen"></link>
-    <link rel="stylesheet" type="text/css" href="invention-styles.css" media="screen"></link>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
   </head>
 
 
   <body onLoad="loadInventionInfo()">
-    <h1>Invention Gallery</h1>
 
-    <div id="invention-page">
-      <h3>Invention Page</h3>
+    <div class="header">
+      <h1>Invention Gallery</h1>
+
+      <div id="invention-page">
+        <h3>Invention Page</h3>
+      </div>
     </div>
 
     <hr>
 
-    Product Name: <div id="product-name"></div>
+    <div class="second-header">
+				<ul>
+            Product Name: <li id="product-name"><span ></span> </li>
+            Exhibitied by: <li id="product-owner"><span ></span> </li>
+            Overall Rating: <li id="overall-rating"><span ></span> </li>
+				</ul>
+		</div>
     
     <hr>
 
-    Exhibitied by:  <div id="product-owner"></div>
     <br/>
-    Overall Rating of the invention: <div id="overall-rating"></div>
+        
 
-    <hr>
-
-    <br/>
-    Product Photo: <div id="product-photo"></div>    
-    <br/>
-    Photo URL: <div id="photo-url"></div>
-    <br/>
-    Product Cost: <div id="product-cost"></div>
-    <br/>
-    Product Materials: <div id="product-materials"></div>
-    <br/>
-    Inventor Name: <div id="inventor-name"></div>
-    <br/>
-
-    
+    <div class="inv-info">
+        <div id="product-photo"></div>
+        <div class="inv-info-two">
+            Photo URL: <div id="photo-url"></div>
+            <br/><br/>
+            Product Cost: <div id="product-cost"></div>
+            <br/><br/>
+            Product Materials: <div id="product-materials"></div>
+            <br/><br/>
+            Inventor Name: <div id="inventor-name"></div>
+        </div>
+    </div>
 
   </body>
 

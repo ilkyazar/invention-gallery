@@ -2,23 +2,37 @@
   <head>
     <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.0/stitch.js"></script>
     <script src="homepage.js"></script>
+    <link rel="stylesheet" type="text/css" href="user-styles.css" media="screen"></link>
   </head>
 
   <body onLoad="displayUsersOnLoad()">
-    <h1>Invention Gallery</h1>
-    <div id="homepage">
-      <h3>Homepage</h3>
+
+    <div class="header">
+        <h1>Invention Gallery</h1>
+        <div id="homepage">
+          <h3>Homepage</h3>
+        </div>
     </div>
     <hr>
-    <p>Users in the database:</p>
-    <div id="users"></div>
-    <hr>
-    Add User: <input id="new_user"><input type="submit" onClick="addUser()">
-    <br/><br/>
-    Delete User: <input id="delete_user"><input type="submit" onClick="deleteUser()">
-    <br/><br/>
-    Login as a User: <input id="login_user"><input type="submit" onClick="loginUser()">
-    <br/><br/><br/><br/>
+
+    <div class="second-header">
+				<p>Users in the database:</p>
+        <div id="users"></div>
+        <br/>
+		</div>
+
+    <div class="third-header">
+        <br/><br/>
+        Add User: <input id="new_user"><input class="index-add" value="ADD" type="submit" onClick="addUser()">
+        <br/><br/>
+        Delete User: <input id="delete_user"><input class="index-delete" value="DELETE" type="submit" onClick="deleteUser()">
+        <br/><br/>
+        Login as a User: <input id="login_user"><input class="index-login" value="LOGIN" type="submit" onClick="loginUser()">
+        <br/><br/><br/>
+		</div>
+
+    
+    <br/><br/><br/><br/><br/><br/><br/>
     <input id="delete_all_users" type="button" value="Delete All Users" onClick="deleteAllUsers()">
 
   </body>
