@@ -25,6 +25,7 @@ function loadInventionInfo() {
             const productMaterials = docs.map(doc => `<div>${doc.productMaterials}</div>`);
             const inventorName = docs.map(doc => `<div>${doc.inventorName}</div>`);
             const productOwner = docs.map(doc => `<div>${doc.user}</div>`);
+            const overallRating = docs.map(doc => `<div>${doc.rating}</div>`);
 
             document.getElementById("product-name").innerHTML = name;
             document.getElementById("product-photo").innerHTML = `<div id=\"invention-item\" class=\"invention-item\"
@@ -36,7 +37,8 @@ function loadInventionInfo() {
             document.getElementById("product-cost").innerHTML = productCost;
             document.getElementById("product-materials").innerHTML = productMaterials;
             document.getElementById("inventor-name").innerHTML = inventorName;
-            document.getElementById("product-owner").innerHTML = productOwner;                  
+            document.getElementById("product-owner").innerHTML = productOwner;          
+            document.getElementById("overall-rating").innerHTML = overallRating;         
         }
         else {
             console.log("Product: " + name + " not found.");
