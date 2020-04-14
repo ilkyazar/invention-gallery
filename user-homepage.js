@@ -317,7 +317,15 @@ function exhibitInvention() {
 
   const optional1 = document.getElementById("optional-1");
   const optional2 = document.getElementById("optional-2");
+  const optional1name = document.getElementById("optional-1-name");
+  const optional2name = document.getElementById("optional-2-name");
   
+  if (productName.value == '' || productPhoto.value == ''
+      || productCost.value == '' || productMaterials.value == ''
+      || inventorName.value == '') {
+        alert("Required areas* should be filled.")
+        return;
+      }
 
   db.collection("inventions")
     .find({productName: productName.value}, { limit: 1 })
@@ -346,10 +354,12 @@ function exhibitInvention() {
                 productCost: productCost.value,
                 productMaterials: productMaterials.value,
                 inventorName: inventorName.value,   
-                optional1: optional1.value, 
-                optional2: optional2.value, 
                 showTo: allUsers,
                 usersRated: [],
+                optional1: optional1.value,
+                optional1name: optional1name.value,
+                optional2: optional2.value,
+                optional2name: optional2name.value,
                 rating: 0
             }           
           )
@@ -368,6 +378,8 @@ function exhibitInvention() {
               inventorName.value = "";
               optional1.value = "";
               optional2.value = "";
+              optional1name.value = "";
+              optional2name.value = "";
               closeExhibit();
     
               loadGallery();
