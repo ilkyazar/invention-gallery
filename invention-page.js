@@ -21,11 +21,16 @@ function loadInventionInfo() {
         if (docs.length > 0) {
             const productPhoto = docs.map(doc => `<div>${doc.productPhoto}</div>`);
             const photoSource = docs.map(doc => `${doc.productPhoto}`);
-            const productCost = docs.map(doc => `<div>${doc.productCost}</div>`);
-            const productMaterials = docs.map(doc => `<div>${doc.productMaterials}</div>`);
-            const inventorName = docs.map(doc => `<div>${doc.inventorName}</div>`);
+
+            const productCost = docs.map(doc => `<div>${doc.productCost || "-"}</div>`);
+            const productMaterials = docs.map(doc => `<div>${doc.productMaterials || "-"}</div>`);
+            const inventorName = docs.map(doc => `<div>${doc.inventorName || "-"}</div>`);
+            
             const productOwner = docs.map(doc => `<div>${doc.user}</div>`);
             const overallRating = docs.map(doc => `<div>${doc.rating}</div>`);
+
+            const optional1 = docs.map(doc => `<div>${doc.optional1 || "-"}</div>`);
+            const optional2 = docs.map(doc => `<div>${doc.optional2 || "-"}</div>`);
 
             document.getElementById("product-name").innerHTML = name;
             document.getElementById("product-photo").innerHTML = `<div id=\"invention-item\" class=\"invention-item\"
@@ -38,7 +43,10 @@ function loadInventionInfo() {
             document.getElementById("product-materials").innerHTML = productMaterials;
             document.getElementById("inventor-name").innerHTML = inventorName;
             document.getElementById("product-owner").innerHTML = productOwner;          
-            document.getElementById("overall-rating").innerHTML = overallRating;         
+            document.getElementById("overall-rating").innerHTML = overallRating; 
+            
+            document.getElementById("optional-1").innerHTML = optional1; 
+            document.getElementById("optional-2").innerHTML = optional2; 
         }
         else {
             console.log("Product: " + name + " not found.");

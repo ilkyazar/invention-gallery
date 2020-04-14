@@ -314,6 +314,9 @@ function exhibitInvention() {
   const productCost = document.getElementById("product-cost");
   const productMaterials = document.getElementById("product-materials");
   const inventorName = document.getElementById("inventor-name");
+
+  const optional1 = document.getElementById("optional-1");
+  const optional2 = document.getElementById("optional-2");
   
 
   db.collection("inventions")
@@ -342,7 +345,9 @@ function exhibitInvention() {
                 productPhoto: productPhoto.value,
                 productCost: productCost.value,
                 productMaterials: productMaterials.value,
-                inventorName: inventorName.value,    
+                inventorName: inventorName.value,   
+                optional1: optional1.value, 
+                optional2: optional2.value, 
                 showTo: allUsers,
                 usersRated: [],
                 rating: 0
@@ -361,6 +366,8 @@ function exhibitInvention() {
               productCost.value = "";
               productMaterials.value = "";
               inventorName.value = "";
+              optional1.value = "";
+              optional2.value = "";
               closeExhibit();
     
               loadGallery();
