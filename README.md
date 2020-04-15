@@ -27,7 +27,7 @@ Login as a User:
     You get an alert if you try to login as a user that doesn't exist in the database.
     A successful login will redirect you to user homepage.
 
-2 - In the user homepage, you can see the username and rating at the top. There is an exhibit button which opens a form in the same page. Also, there is a gallery that shows the photos of the inventions with a drop button and stars underneath them. Stars show the rating of the user who is currently logged in. After logging in from the main homepage, without a password authentication, you redirect to this page. 
+2 - In the user homepage, you can see the username and rating at the top. There is an exhibit button which opens a form in the same page. Also, there is a gallery that shows the photos of the inventions with a drop button and stars underneath them. User who exhibited the invention and the invention name can be seen on the top of each photo. Stars show the rating of the user who is currently logged in. After logging in from the main homepage, without a password authentication, you redirect to this page. 
 
 Exhibit an invention:
 
@@ -107,7 +107,8 @@ A sample invention document contains:
     "optional1":"a capacitive electrode (top load) (E) in the form of a smooth metal sphere or torus attached to the secondary terminal of the coil",
     "optional1name":"Optional material for a tesla coil",
     "optional2":"The present is theirs; the future, for which I really worked, is mine.",
-    "optional2name":"Inventor quote","rating":{"$numberDouble":"4.333333333333333"}}
+    "optional2name":"Inventor quote",
+    "rating":{"$numberDouble":"4.333333333333333"}}
 
 I have three main js files for the three main pages:
     
@@ -119,9 +120,27 @@ In the homepage, first I load all the users in onload function. For this I use '
 
 In the user homepage, I load user information and gallery when the page is first loaded. After awaiting all promises from a promise array, I get all of the related information. Then, I edit the inner html accordingly. 
 
+When loading the gallery, I find documents from inventions if they have the current user in their showTo array.
+
+When a user wants to rate, I check _ratedFor_ array of the users in order to understand whether I overwrite or create a new field. I use either pull and _addToSet_ or just _addToSet_ accordingly. Then I first update the rating of the invention and after that, I update the rating of the user. Since I store all of the rating of the inventions seperately in the inventions collection, in order to calculate the user's rating, I just calculate the average of that particular user's invention ratings. 
+
+When a user wants to drop, I pull the user from _showTo_ array.
+
+For drop operation, I update the database only if the length of the returning array from the users collection is greater than 0 when filtered with the current user and product name, which means that I only allow the user to drop it's own inventions. I use a similar approach for rating but the users can rate only others this time.
+
+If a user wants to exhibit and fills the required areas, I update the inventions collection by inserting and user inventions in user collection by pushing to the inventions array accordingly. But if a user didn't fill in the required areas, submitting is not allowed. Optional areas can be empty.
+
+In the invention page, I load all of the product information first. I get the product name from the URL, and find that invention in the database according to that parameter. Then, I edit the inner html.
+
 **Extras**
 
 I set my whitelist to 0.0.0.0/0 to allow the entire Internet into my IP whitelist in Atlas.
+
+Currently there are 10 users and 15 inventions. 
+
+john doe, jenny doe, nikola tesla and thomas edison have more than 1 product. 
+
+teleautomaton, tesla turbine, mimeograph and phonograph are some of the inventions that have 1 or 2 optional elements
 
 **Reference**
 

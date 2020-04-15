@@ -51,7 +51,7 @@ function loadGallery() {
 
               return `<div id=\"invention-item\" class=\"invention-item\"
                     tabindex=\"0\" > 
-                        <div style="color:black"> ${doc.user}</div>
+                        <div style="color:black"> ${doc.user} - ${doc.productName} </div>
                         <img src=\"${doc.productPhoto}\" class=\"invention-img\"
                             id=\"invention-img\" alt=\"\"
                             onClick=\"loadInvention('${doc.productName}')\">
